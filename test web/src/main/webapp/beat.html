@@ -151,7 +151,7 @@ function searchBeats(){
     const div = document.createElement('div');
     div.className = 'video-card';
     div.innerHTML = `
-      <iframe class="video-frame" src="${beat.embed}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+      <iframe class="video-frame" src="${beat.embed}" allowfullscreen></iframe>
       <div class="feedback">
         <button onclick="saveBeat('like', ${idx})">❤️</button>
         <button onclick="saveBeat('hold', ${idx})">🕓</button>
@@ -193,12 +193,13 @@ function closeSaved(){
   document.getElementById('savedSection').style.display = 'none';
 }
 
-// ✅ 홈 버튼 강제 이동 (모든 환경 작동)
+// ✅ 홈 버튼: 완전 강제 이동 (어디서든 작동)
 document.querySelector('.home-btn').addEventListener('click', () => {
-  // 현재 beat.html 파일 위치에서 main.html 절대 경로 추적
-  const current = window.location.href;
-  const path = current.replace(/beat\\.html.*$/, 'main.html');
-  console.log('이동 경로:', path);
-  window.location.href = path;
+  try {
+    // main.html이 같은 폴더에 있다면 이 코드로 충분
+    location.assign('main.html');
+  } catch (e) {
+    alert('main.html 파일이 같은 폴더에 있는지 확인해주세요!');
+  }
 });
 </script>
