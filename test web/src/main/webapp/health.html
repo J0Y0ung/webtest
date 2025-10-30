@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>R!DE OUT • 건강 관리</title>
+<style>
+:root{--bg:#000;--fg:#fff;--accent:#8a7cff;}
+body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,Roboto;}
+.app{max-width:430px;height:100vh;margin:auto;display:flex;flex-direction:column;border:1px solid #222;border-radius:30px;overflow:hidden;}
+header{padding:12px;text-align:center;font-weight:800;font-size:1.3rem;background:#111;}
+main{flex:1;padding:20px;display:flex;flex-direction:column;gap:16px;}
+input,select,button{padding:10px;border-radius:10px;border:none;font-size:1rem;}
+button{background:var(--accent);color:#fff;cursor:pointer;}
+.log{margin-top:10px;border-top:1px solid #333;padding-top:10px;}
+.tabbar-wrap{background:#111;padding:10px;display:flex;justify-content:center;}
+.home-btn{width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="app">
+<header>💪 건강 관리</header>
+<main>
+  <label>수면 시간(시간): <input type="number" id="sleep" min="0" max="24"></label>
+  <label>운동 여부:
+    <select id="workout"><option>안함</option><option>가볍게</option><option>강도 높게</option></select>
+  </label>
+  <label>식사 횟수(회): <input type="number" id="meal" min="0" max="5"></label>
+  <button onclick="saveHealth()">기록하기</button>
+  <div class="log" id="log"></div>
+</main>
+<div class="tabbar-wrap"><button class="home-btn" onclick="location.href='main.html'"></button></div>
+</div>
+
+<script>
+function saveHealth(){
+  const s=document.getElementById('sleep').value;
+  const w=document.getElementById('workout').value;
+  const m=document.getElementById('meal').value;
+  const log=document.getElementById('log');
+  const data=`수면 ${s}시간 / 운동 ${w} / 식사 ${m}회`;
+  localStorage.setItem('healthLog',data);
+  log.textContent='✅ 오늘 기록: '+data;
+}
+window.onload=()=>{
+  const prev=localStorage.getItem('healthLog');
+  if(prev) document.getElementById('log').textContent='마지막 기록: '+prev;
+}
+</script>
+</body>
+</html>

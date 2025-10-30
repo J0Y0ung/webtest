@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>R!DE OUT • 성장형 AI</title>
+<style>
+:root{--bg:#000;--fg:#fff;--accent:#8a7cff;}
+body{background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,Roboto;}
+.app{max-width:430px;height:100vh;margin:auto;display:flex;flex-direction:column;border:1px solid #222;border-radius:30px;overflow:hidden;}
+header{padding:12px;text-align:center;font-weight:800;font-size:1.3rem;background:#111;}
+main{flex:1;padding:20px;display:flex;flex-direction:column;gap:16px;}
+input,button{padding:10px;border-radius:10px;border:none;font-size:1rem;}
+button{background:var(--accent);color:#fff;cursor:pointer;}
+.app-list{margin-top:20px;display:flex;flex-direction:column;gap:10px;}
+.app-item{background:#111;padding:10px;border-radius:10px;}
+.tabbar-wrap{background:#111;padding:10px;display:flex;justify-content:center;}
+.home-btn{width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="app">
+<header>🤖 성장형 AI</header>
+<main>
+  <p>추가하고 싶은 앱이나 기능 이름을 입력하면 AI가 저장합니다.</p>
+  <input id="newApp" placeholder="예: Spotify, 테마 변경 등">
+  <button onclick="addApp()">추가하기</button>
+  <div class="app-list" id="appList"></div>
+</main>
+<div class="tabbar-wrap"><button class="home-btn" onclick="location.href='main.html'"></button></div>
+</div>
+
+<script>
+function addApp(){
+  const name=document.getElementById('newApp').value.trim();
+  if(!name) return alert('앱 이름을 입력하세요.');
+  const list=document.getElementById('appList');
+  const item=document.createElement('div');
+  item.className='app-item';
+  item.textContent='✅ '+name+' 추가됨!';
+  list.appendChild(item);
+  let saved=JSON.parse(localStorage.getItem('customApps')||'[]');
+  saved.push(name);
+  localStorage.setItem('customApps',JSON.stringify(saved));
+}
+window.onload=()=>{
+  const list=document.getElementById('appList');
+  const saved=JSON.parse(localStorage.getItem('customApps')||'[]');
+  saved.forEach(name=>{
+    const item=document.createElement('div');
+    item.className='app-item';
+    item.textContent='✅ '+name+' 추가됨!';
+    list.appendChild(item);
+  });
+}
+</script>
+</body>
+</html>

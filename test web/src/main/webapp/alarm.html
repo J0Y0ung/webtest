@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>R!DE OUT • 비트 알람</title>
+<style>
+:root{--bg:#000;--fg:#fff;--accent:#8a7cff;--gray:#888;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100vh;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,Roboto;}
+.app{max-width:430px;height:100%;margin:auto;display:flex;flex-direction:column;border:1px solid #222;border-radius:30px;overflow:hidden;}
+header{padding:12px;text-align:center;font-weight:800;font-size:1.3rem;background:#111;}
+main{flex:1;padding:20px;display:flex;flex-direction:column;gap:14px;}
+input,button{padding:10px;border-radius:10px;border:none;font-size:1rem;}
+input{background:#111;color:#fff;}
+button{background:var(--accent);color:#fff;font-weight:600;cursor:pointer;}
+iframe{width:100%;height:200px;border:none;border-radius:10px;margin-top:10px;}
+.tabbar-wrap{background:#111;padding:10px;display:flex;justify-content:center;}
+.home-btn{width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="app">
+<header>⏰ 비트 알람</header>
+<main>
+  <p style="color:var(--gray);font-size:.9rem;">유튜브 비트 링크를 입력하면 알람음으로 재생됩니다.</p>
+  <input id="youtubeLink" placeholder="https://www.youtube.com/watch?v=..." />
+  <input type="time" id="alarmTime" />
+  <button onclick="setAlarm()">알람 설정</button>
+  <div id="status"></div>
+  <div id="preview"></div>
+</main>
+<div class="tabbar-wrap"><button class="home-btn" onclick="location.href='main.html'"></button></div>
+</div>
+
+<script>
+let alarmTimer;
+
+function setAlarm(){
+  const link=document.getElementById('youtubeLink').value.trim();
+  const time=document.getElementById('alarmTime').value;
+  const status=document.getElementById('status');
+  const preview=document.getElementById('preview');
+  if(!link || !time){status.textContent='링크와 시간을 입력하세요.';return;}
+  status.textContent='알람 설정 완료! 🎵';
+  const [hour,minute]=time.split(':').map(Number);
+  const now=new Date();
+  let alarm=new Date(); alarm.setHours(hour,minute,0,0);
+  if(alarm<=now) alarm.setDate(alarm.getDate()+1);
+  const diff=alarm-now;
+  clearTimeout(alarmTimer);
+  alarmTimer=setTimeout(()=>playAlarm(link),diff);
+}
+function playAlarm(link){
+  const preview=document.getElementById('preview');
+  preview.innerHTML=`<iframe src="${convertToEmbed(link)}?autoplay=1" allow="autoplay"></iframe>`;
+  alert("알람! 🎶");
+}
+function convertToEmbed(url){
+  const id=url.split('v=')[1]?.split('&')[0];
+  return `https://www.youtube.com/embed/${id}`;
+}
+</script>
+</body>
+</html>
