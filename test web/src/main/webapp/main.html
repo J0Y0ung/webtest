@@ -3,57 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>R!DE OUT • 로그인 완성</title>
+<title>R!DE OUT • 로그인 유지 버전</title>
 
-<!-- ✅ 구글 로그인 스크립트 -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-
 <style>
 :root {--bg:#000;--fg:#fff;--card:#0d0d0d;--accent:#8a7cff;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{
-  height:100%;background:var(--bg);color:var(--fg);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-}
-.app{
-  width:100%;max-width:430px;height:100vh;margin:0 auto;
-  display:flex;flex-direction:column;
-  background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;
-  box-shadow:0 0 20px rgba(0,0,0,.8);
-}
-
-/* 상단 */
-header{
-  display:flex;align-items:center;justify-content:center;
-  padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
-  position:relative;
-}
+html,body{height:100%;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+.app{width:100%;max-width:430px;height:100vh;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;box-shadow:0 0 20px rgba(0,0,0,.8);}
+header{display:flex;align-items:center;justify-content:center;padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);position:relative;}
 .logo{font-weight:900;font-size:1.4rem;display:flex;align-items:center;gap:8px;}
-.login-box{
-  position:absolute;right:18px;top:50%;transform:translateY(-50%);
-  border:1px solid #555;border-radius:10px;padding:6px 16px;
-  background:none;color:#fff;cursor:pointer;font-weight:600;
-}
+.login-box{position:absolute;right:18px;top:50%;transform:translateY(-50%);border:1px solid #555;border-radius:10px;padding:6px 16px;background:none;color:#fff;cursor:pointer;font-weight:600;}
 .login-box:hover{border-color:var(--accent);color:var(--accent);}
-.user-info{
-  position:absolute;right:18px;top:50%;transform:translateY(-50%);
-  display:flex;align-items:center;gap:8px;
-  background:rgba(30,30,30,.7);border-radius:15px;padding:4px 8px;cursor:pointer;
-}
+.user-info{position:absolute;right:18px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:8px;background:rgba(30,30,30,.7);border-radius:15px;padding:4px 8px;cursor:pointer;}
 .user-info img{width:28px;height:28px;border-radius:50%;}
 .user-info span{font-size:0.85rem;color:#fff;}
-
-/* ✅ 로그아웃 창 */
-.logout-popup{
-  position:absolute;right:15px;top:60px;
-  background:#111;border:1px solid #444;border-radius:10px;
-  padding:10px 14px;display:none;flex-direction:column;align-items:flex-start;
-  z-index:10;
-}
-.logout-popup button{
-  background:none;border:none;color:#fff;cursor:pointer;
-  font-size:0.85rem;padding:6px 0;
-}
+.logout-popup{position:absolute;right:15px;top:60px;background:#111;border:1px solid #444;border-radius:10px;padding:10px 14px;display:none;flex-direction:column;align-items:flex-start;z-index:10;}
+.logout-popup button{background:none;border:none;color:#fff;cursor:pointer;font-size:0.85rem;padding:6px 0;}
 .logout-popup button:hover{color:var(--accent);}
 </style>
 </head>
@@ -69,7 +35,6 @@ header{
       <span id="userName"></span>
     </div>
 
-    <!-- ✅ 로그아웃 팝업 -->
     <div id="logoutPopup" class="logout-popup">
       <button id="logoutBtn">🚪 로그아웃</button>
     </div>
@@ -82,38 +47,49 @@ header{
 
 <script>
 let client;
+
 window.onload = () => {
-  // ✅ 구글 로그인 초기화
   client = google.accounts.id;
   client.initialize({
     client_id: "532947601912-icqiv653f1rb7d9d7f5soonre0hkoe9b.apps.googleusercontent.com",
     callback: handleCredentialResponse
   });
 
-  // ✅ 로그인 버튼 클릭 → 팝업 로그인 실행
+  // ✅ 저장된 로그인 정보가 있으면 자동 표시
+  const savedUser = JSON.parse(localStorage.getItem("rideout_user"));
+  if(savedUser){
+    showUser(savedUser);
+  }
+
+  // ✅ 로그인 버튼 클릭
   document.getElementById("loginBtn").addEventListener("click", () => {
     client.prompt();
   });
 
-  // ✅ 프로필 클릭 → 로그아웃 창 표시
+  // ✅ 프로필 클릭 → 로그아웃 창 토글
   document.getElementById("userInfo").addEventListener("click", () => {
     const popup = document.getElementById("logoutPopup");
     popup.style.display = popup.style.display === "flex" ? "none" : "flex";
   });
 
-  // ✅ 로그아웃 버튼 클릭
+  // ✅ 로그아웃 클릭
   document.getElementById("logoutBtn").addEventListener("click", logoutUser);
 };
 
-// ✅ 로그인 성공 시 사용자 정보 표시
+// ✅ 로그인 성공 시
 function handleCredentialResponse(response){
   const data = parseJwt(response.credential);
+  localStorage.setItem("rideout_user", JSON.stringify(data));
+  showUser(data);
+}
+
+// ✅ 사용자 표시 함수
+function showUser(data){
   document.getElementById("loginBtn").style.display = "none";
   const info = document.getElementById("userInfo");
   document.getElementById("userImg").src = data.picture;
   document.getElementById("userName").textContent = data.name;
   info.style.display = "flex";
-  localStorage.setItem("rideout_user", JSON.stringify(data));
 }
 
 // ✅ 로그아웃
@@ -124,7 +100,7 @@ function logoutUser(){
   document.getElementById("loginBtn").style.display = "block";
 }
 
-// ✅ 토큰 디코드 함수
+// ✅ JWT 디코드
 function parseJwt(token){
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g,'+').replace(/_/g,'/');
