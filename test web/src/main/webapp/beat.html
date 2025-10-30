@@ -199,10 +199,14 @@ function closeSaved(){
   document.getElementById('savedSection').style.display = 'none';
 }
 
-function goHome(){
-  // 홈으로 돌아가기
-  window.location.href = './main.html';
-}
+
+	function goHome() {
+		  // 현재 경로에서 main.html의 절대 경로를 계산
+		  const currentPath = window.location.href;
+		  const basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+		  window.location.href = basePath + '/main.html';
+		}
+
 </script>
 </body>
 </html>
