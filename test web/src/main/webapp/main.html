@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>R!DE OUT • 구글 로그인 완전 안정버전</title>
+<title>R!DE OUT • 구글 로그인 안정 버전</title>
 
 <!-- ✅ 구글 로그인 스크립트 -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client" onload="onGoogleLibraryLoad()" async defer></script>
 
 <style>
 :root {--bg:#000;--fg:#fff;--card:#0d0d0d;--accent:#8a7cff;}
@@ -48,16 +48,12 @@ header{display:flex;align-items:center;justify-content:center;padding:10px 18px;
 </div>
 
 <script>
-// ✅ Google API가 완전히 로드된 뒤 실행되도록 이벤트 등록
-window.addEventListener("DOMContentLoaded", () => {
-  // 구글 스크립트 로드 기다리기
-  const interval = setInterval(() => {
-    if (window.google && google.accounts && google.accounts.id) {
-      clearInterval(interval);
-      initGoogleLogin(); // 로그인 시스템 초기화
-    }
-  }, 300);
-});
+let googleReady = false;
+
+function onGoogleLibraryLoad(){
+  googleReady = true;
+  initGoogleLogin();
+}
 
 function initGoogleLogin(){
   google.accounts.id.initialize({
@@ -65,33 +61,31 @@ function initGoogleLogin(){
     callback: handleCredentialResponse
   });
 
-  // 저장된 로그인 확인
   const savedUser = JSON.parse(localStorage.getItem("rideout_user"));
   if(savedUser) showUser(savedUser);
 
-  // 로그인 버튼 클릭 → 팝업 로그인 실행
   document.getElementById("loginBtn").addEventListener("click", () => {
-    google.accounts.id.prompt();
+    if (googleReady) {
+      google.accounts.id.prompt();
+    } else {
+      alert("Google 로그인 시스템이 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.");
+    }
   });
 
-  // 프로필 클릭 → 로그아웃 창 토글
   document.getElementById("userInfo").addEventListener("click", () => {
     const popup = document.getElementById("logoutPopup");
     popup.style.display = popup.style.display === "flex" ? "none" : "flex";
   });
 
-  // 로그아웃 버튼 클릭
   document.getElementById("logoutBtn").addEventListener("click", logoutUser);
 }
 
-// ✅ 로그인 성공 시 사용자 정보 표시
 function handleCredentialResponse(response){
   const data = parseJwt(response.credential);
   localStorage.setItem("rideout_user", JSON.stringify(data));
   showUser(data);
 }
 
-// ✅ 사용자 정보 표시
 function showUser(data){
   document.getElementById("loginBtn").style.display = "none";
   const info = document.getElementById("userInfo");
@@ -100,7 +94,6 @@ function showUser(data){
   info.style.display = "flex";
 }
 
-// ✅ 로그아웃
 function logoutUser(){
   localStorage.removeItem("rideout_user");
   document.getElementById("userInfo").style.display = "none";
@@ -108,7 +101,6 @@ function logoutUser(){
   document.getElementById("loginBtn").style.display = "block";
 }
 
-// ✅ JWT 디코드
 function parseJwt(token){
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g,'+').replace(/_/g,'/');
