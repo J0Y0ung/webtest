@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>R!DE OUT • 메인</title>
+
+<!-- ✅ Google 로그인 스크립트 -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <style>
 :root {--bg:#000;--fg:#fff;--card:#0d0d0d;--accent:#8a7cff;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -24,87 +28,56 @@ header{
   padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
   position:relative;
 }
-.logo{font-weight:900;font-size:1.4rem;display:flex;align-items:center;gap:8px;}
+.logo{
+  font-weight:900;font-size:1.4rem;display:flex;align-items:center;gap:8px;
+}
 .login-box{
   position:absolute;right:18px;top:50%;transform:translateY(-50%);
-  border:1px solid #555;border-radius:10px;padding:6px 16px;background:none;color:#fff;cursor:pointer;
 }
-.login-box:hover{border-color:var(--accent);color:var(--accent);}
+.user-info{
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;gap:8px;
+  background:rgba(30,30,30,.7);border-radius:15px;padding:4px 8px;
+}
+.user-info img{
+  width:28px;height:28px;border-radius:50%;
+}
+.user-info span{
+  font-size:0.85rem;color:#fff;
+}
 
 /* 중앙 */
 main{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;   /* 왼쪽 정렬 */
-  justify-content:flex-start; /* 위쪽 정렬 */
-  padding:15px 18px;
-  overflow-y:auto;
-  position:relative;
+  flex:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;
+  padding:15px 18px;overflow-y:auto;position:relative;
 }
 .center-emoji{
-  position:absolute;
-  top:65%;left:50%;
-  transform:translate(-50%,-50%);
+  position:absolute;top:65%;left:50%;transform:translate(-50%,-50%);
   font-size:12rem;opacity:0.07;pointer-events:none;
   animation:fadePulse 6s ease-in-out infinite;
-  z-index:0;
 }
 @keyframes fadePulse{
   0%{opacity:.05;transform:translate(-50%,-50%) scale(1);}
   50%{opacity:.15;transform:translate(-50%,-50%) scale(1.1);}
   100%{opacity:.05;transform:translate(-50%,-50%) scale(1);}
 }
-
-/* ✅ 아이콘을 상단 왼쪽부터 */
 .icon-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px 12px;
-  justify-items:center;
-  align-items:start;
-  width:100%;
-  margin-top:0;             /* 상단 여백 제거 */
-  z-index:1;                /* 이모지 아래로 들어가지 않게 */
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px 12px;
+  justify-items:center;align-items:start;width:100%;margin-top:0;z-index:1;
 }
 .icon-container{display:flex;flex-direction:column;align-items:center;}
 .icon-btn{
-  width:70px;height:70px;background:var(--card);
-  border:1px solid #333;border-radius:20px;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  transition:0.2s;
+  width:70px;height:70px;background:var(--card);border:1px solid #333;border-radius:20px;color:#fff;
+  display:flex;align-items:center;justify-content:center;transition:0.2s;
 }
-.icon-btn:hover{
-  transform:scale(1.08);
-  border-color:var(--accent);
-  box-shadow:0 0 12px var(--accent);
-}
-.icon-label{
-  margin-top:8px;font-size:0.8rem;font-weight:600;color:#fff;text-align:center;
-}
+.icon-btn:hover{transform:scale(1.08);border-color:var(--accent);box-shadow:0 0 12px var(--accent);}
+.icon-label{margin-top:8px;font-size:0.8rem;font-weight:600;color:#fff;text-align:center;}
 .icon-btn .emoji{font-size:34px;}
-
-/* 하단 */
 .tabbar-wrap{
-  width:100%;
-  background:rgba(20,20,20,0.6);
-  backdrop-filter:blur(12px);
-  padding:10px 0;
-  display:flex;justify-content:center;align-items:center;
-  border-top:1px solid rgba(255,255,255,0.1);
+  width:100%;background:rgba(20,20,20,0.6);backdrop-filter:blur(12px);
+  padding:10px 0;display:flex;justify-content:center;align-items:center;border-top:1px solid rgba(255,255,255,0.1);
 }
-.home-btn{
-  width:80px;height:40px;
-  background:rgba(60,60,60,0.8);
-  border:1px solid #555;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.2s;
-}
-.home-btn:hover{
-  background:rgba(120,120,120,0.8);
-  border-color:var(--accent);
-}
+.home-btn{width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;cursor:pointer;}
 </style>
 </head>
 
@@ -112,43 +85,59 @@ main{
 <div class="app">
   <header>
     <div class="logo">🔥 R!DE OUT</div>
-    <button class="login-box">login</button>
+
+    <!-- ✅ Google 로그인 버튼 -->
+    <div id="g_id_onload"
+         data-client_id="532947601912-icqiv653f1rb7d9d7f5soonre0hkoe9b.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="onSignIn"
+         data-auto_prompt="false"></div>
+    <div id="g_id_signin" class="login-box"
+         data-type="icon"
+         data-shape="circle"
+         data-theme="outline"
+         data-size="medium"
+         data-logo_alignment="center"></div>
+
+    <!-- ✅ 로그인 후 표시되는 유저 정보 -->
+    <div id="userInfo" class="user-info" style="display:none;">
+      <img id="userImg" src="">
+      <span id="userName"></span>
+    </div>
   </header>
 
   <main>
     <div class="center-emoji">💫</div>
 
     <div class="icon-grid">
-      <div class="icon-container">
-        <button class="icon-btn" onclick="location.href='beat.html'"><div class="emoji">🎧</div></button>
-        <span class="icon-label">비트 추천</span>
-      </div>
-
-      <div class="icon-container">
-        <button class="icon-btn" onclick="location.href='rhyme.html'"><div class="emoji">✍️</div></button>
-        <span class="icon-label">라임 추천</span>
-      </div>
-
-      <div class="icon-container">
-        <button class="icon-btn" onclick="location.href='alarm.html'"><div class="emoji">⏰</div></button>
-        <span class="icon-label">비트 알람</span>
-      </div>
-
-      <div class="icon-container">
-        <button class="icon-btn" onclick="location.href='health.html'"><div class="emoji">💪</div></button>
-        <span class="icon-label">건강 관리</span>
-      </div>
-
-      <div class="icon-container">
-        <button class="icon-btn" onclick="location.href='ai.html'"><div class="emoji">🤖</div></button>
-        <span class="icon-label">성장형 AI</span>
-      </div>
+      <div class="icon-container"><button class="icon-btn" onclick="location.href='beat.html'"><div class="emoji">🎧</div></button><span class="icon-label">비트 추천</span></div>
+      <div class="icon-container"><button class="icon-btn" onclick="location.href='rhyme.html'"><div class="emoji">✍️</div></button><span class="icon-label">라임 추천</span></div>
+      <div class="icon-container"><button class="icon-btn" onclick="location.href='alarm.html'"><div class="emoji">⏰</div></button><span class="icon-label">비트 알람</span></div>
+      <div class="icon-container"><button class="icon-btn" onclick="location.href='health.html'"><div class="emoji">💪</div></button><span class="icon-label">건강 관리</span></div>
+      <div class="icon-container"><button class="icon-btn" onclick="location.href='ai.html'"><div class="emoji">🤖</div></button><span class="icon-label">성장형 AI</span></div>
     </div>
   </main>
 
-  <div class="tabbar-wrap">
-    <button class="home-btn"></button>
-  </div>
+  <div class="tabbar-wrap"><button class="home-btn"></button></div>
 </div>
+
+<script>
+function onSignIn(response){
+  const data = parseJwt(response.credential);
+  document.getElementById("g_id_signin").style.display = "none";
+  const info = document.getElementById("userInfo");
+  document.getElementById("userImg").src = data.picture;
+  document.getElementById("userName").textContent = data.name;
+  info.style.display = "flex";
+}
+
+function parseJwt(token){
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g,'+').replace(/_/g,'/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(c=>'%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+  return JSON.parse(jsonPayload);
+}
+</script>
 </body>
 </html>
