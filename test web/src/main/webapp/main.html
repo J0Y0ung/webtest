@@ -7,19 +7,22 @@
 <style>
 :root {--bg:#000;--fg:#fff;--card:#0d0d0d;--accent:#8a7cff;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;background:var(--bg);color:var(--fg);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+html,body{
+  height:100%;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
 .app{
   width:100%;max-width:430px;height:100vh;margin:0 auto;
-  display:flex;flex-direction:column;justify-content:space-between;
+  display:flex;flex-direction:column;
   background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;
-  box-shadow:0 0 20px rgba(0,0,0,.8);position:relative;
+  box-shadow:0 0 20px rgba(0,0,0,.8);
 }
 
 /* 상단 */
 header{
-  position:relative;display:flex;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+  position:relative;
 }
 .logo{font-weight:900;font-size:1.4rem;display:flex;align-items:center;gap:8px;}
 .login-box{
@@ -33,17 +36,19 @@ main{
   flex:1;
   display:flex;
   flex-direction:column;
-  align-items:flex-start;       /* ✅ 왼쪽 정렬 */
-  justify-content:flex-start;   /* ✅ 위쪽 정렬 */
+  align-items:flex-start;   /* 왼쪽 정렬 */
+  justify-content:flex-start; /* 위쪽 정렬 */
+  padding:15px 18px;
+  overflow-y:auto;
   position:relative;
-  padding:20px 25px;            /* 여백 조정 */
 }
 .center-emoji{
   position:absolute;
-  top:60%;left:50%;
+  top:65%;left:50%;
   transform:translate(-50%,-50%);
   font-size:12rem;opacity:0.07;pointer-events:none;
   animation:fadePulse 6s ease-in-out infinite;
+  z-index:0;
 }
 @keyframes fadePulse{
   0%{opacity:.05;transform:translate(-50%,-50%) scale(1);}
@@ -51,47 +56,65 @@ main{
   100%{opacity:.05;transform:translate(-50%,-50%) scale(1);}
 }
 
-/* ✅ 아이콘 그리드 상단 왼쪽 정렬 */
+/* ✅ 아이콘을 상단 왼쪽부터 */
 .icon-grid{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:22px 14px;
+  gap:20px 12px;
   justify-items:center;
   align-items:start;
   width:100%;
-  margin-top:30px;       /* 상단 여백 줄이기 */
+  margin-top:0;             /* 상단 여백 제거 */
+  z-index:1;                /* 이모지 아래로 들어가지 않게 */
 }
 .icon-container{display:flex;flex-direction:column;align-items:center;}
 .icon-btn{
-  width:70px;height:70px;background:var(--card);border:1px solid #333;border-radius:20px;color:#fff;
-  display:flex;align-items:center;justify-content:center;transition:0.2s;
+  width:70px;height:70px;background:var(--card);
+  border:1px solid #333;border-radius:20px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:0.2s;
 }
-.icon-btn:hover{transform:scale(1.08);border-color:var(--accent);box-shadow:0 0 12px var(--accent);}
-.icon-label{margin-top:8px;font-size:0.8rem;font-weight:600;color:#fff;text-align:center;}
+.icon-btn:hover{
+  transform:scale(1.08);
+  border-color:var(--accent);
+  box-shadow:0 0 12px var(--accent);
+}
+.icon-label{
+  margin-top:8px;font-size:0.8rem;font-weight:600;color:#fff;text-align:center;
+}
 .icon-btn .emoji{font-size:34px;}
 
 /* 하단 */
 .tabbar-wrap{
-  width:100%;background:rgba(20,20,20,0.6);backdrop-filter:blur(12px);
-  padding:10px 0;display:flex;justify-content:center;align-items:center;
+  width:100%;
+  background:rgba(20,20,20,0.6);
+  backdrop-filter:blur(12px);
+  padding:10px 0;
+  display:flex;justify-content:center;align-items:center;
   border-top:1px solid rgba(255,255,255,0.1);
 }
 .home-btn{
-  width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;cursor:pointer;transition:0.2s;
+  width:80px;height:40px;
+  background:rgba(60,60,60,0.8);
+  border:1px solid #555;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.2s;
 }
-.home-btn:hover{background:rgba(120,120,120,0.8);border-color:var(--accent);}
+.home-btn:hover{
+  background:rgba(120,120,120,0.8);
+  border-color:var(--accent);
+}
 </style>
 </head>
 
 <body>
 <div class="app">
-  <!-- 상단 -->
   <header>
     <div class="logo">🔥 R!DE OUT</div>
     <button class="login-box">login</button>
   </header>
 
-  <!-- 중앙 -->
   <main>
     <div class="center-emoji">💫</div>
 
@@ -123,8 +146,9 @@ main{
     </div>
   </main>
 
-  <!-- 하단 -->
-  <div class="tabbar-wrap"><button class="home-btn"></button></div>
+  <div class="tabbar-wrap">
+    <button class="home-btn"></button>
+  </div>
 </div>
 </body>
 </html>
