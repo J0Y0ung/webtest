@@ -7,7 +7,7 @@
 <style>
 body {
   background:black; color:white;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-family: Arial, sans-serif;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   height:100vh; text-align:center;
@@ -20,30 +20,22 @@ p {opacity:0.7; margin-top:10px;}
   <div id="userInfo"></div>
 
 <script>
-try {
-  const user = JSON.parse(localStorage.getItem('rideout_user'));
-  const info = document.getElementById('userInfo');
+const user = JSON.parse(localStorage.getItem('rideout_user'));
+const info = document.getElementById('userInfo');
 
-  if (user && user.name) {
-    info.innerHTML = `
-      <img src="${user.picture}">
-      <h2>${user.name}님 환영합니다 👋</h2>
-      <p>잠시 후 메인 화면으로 이동합니다...</p>
-    `;
-
-    // ✅ 1.5초 후 home.html로 이동
-    setTimeout(() => {
-      window.location.href = 'home.html';
-    }, 1500);
-
-  } else {
-    // 로그인 정보 없으면 로그인 화면으로
-    window.location.href = 'login.html';
-  }
-
-} catch (err) {
-  console.error('에러:', err);
-  window.location.href = 'login.html';
+if(user && user.name){
+  info.innerHTML = `
+    <img src="${user.picture}">
+    <h2>${user.name}님 환영합니다 👋</h2>
+    <p>잠시 후 메인 화면으로 이동합니다...</p>
+  `;
+  // ✅ 2초 뒤 홈으로 이동
+  setTimeout(() => {
+    console.log("홈으로 이동 중...");
+    window.location.href = './home.html';
+  }, 2000);
+}else{
+  window.location.href = './login.html';
 }
 </script>
 </body>
