@@ -1,688 +1,104 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Insta-like Demo (HTML/CSS/JS)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>R!DE OUT • 메인</title>
 <style>
-  :root{
-    --accent:#0095f6;
-    --bg:#fff;
-    --muted:#8a8a8a;
-    --card:#fafafa;
-    --maxw:430px;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    background:linear-gradient(#f6f7f8,#fff);
-    display:flex;justify-content:center;padding:20px;
-  }
-  .app{
-    width:var(--maxw);max-width:100%;height:880px;border-radius:20px;background:var(--bg);
-    box-shadow:0 18px 40px rgba(10,10,20,0.12);overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(0,0,0,0.04);
-  }
+:root {
+  --bg:#000; --fg:#fff; --card:#0d0d0d; --accent:#8a7cff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  height:100%;background:var(--bg);color:var(--fg);
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+.app{
+  width:100%;max-width:430px;height:100vh;margin:0 auto;
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;
+  box-shadow:0 0 20px rgba(0,0,0,.8);
+  position:relative;
+}
 
-  /* Topbar */
-  .topbar{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #eee;flex-shrink:0}
-  .brand{font-weight:700;font-size:16px}
-  .icons{display:flex;gap:10px}
-  .icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .icon svg{width:20px;height:20px}
+header{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
+}
+.logo{
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.4rem;color:#fff;gap:8px;
+}
+.login-box{
+  position:absolute;right:18px;top:50%;transform:translateY(-50%);
+  border:1px solid #555;border-radius:10px;padding:6px 16px;background:none;color:#fff;cursor:pointer;font-weight:600;
+}
+.login-box:hover{border-color:var(--accent);color:var(--accent);}
 
-  /* Main content (scroll) */
-  .main{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(#fff,#fff);}
+main{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:20px;padding:30px 20px;position:relative;
+}
+.center-emoji{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:12rem;opacity:0.07;pointer-events:none;
+  animation:fadePulse 6s ease-in-out infinite;
+}
+@keyframes fadePulse {
+  0% {opacity:0.05;transform:translate(-50%,-50%) scale(1);}
+  50% {opacity:0.15;transform:translate(-50%,-50%) scale(1.1);}
+  100% {opacity:0.05;transform:translate(-50%,-50%) scale(1);}
+}
+.icon-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px 14px;justify-items:center;width:100%;margin-top:40px;
+}
+.icon-container{display:flex;flex-direction:column;align-items:center;}
+.icon-btn{
+  width:70px;height:70px;background:var(--card);border:1px solid #333;border-radius:20px;color:#fff;
+  display:flex;align-items:center;justify-content:center;transition:0.2s;overflow:hidden;position:relative;
+}
+.icon-btn:hover{transform:scale(1.08);border-color:var(--accent);box-shadow:0 0 12px var(--accent);}
+.icon-label{margin-top:8px;font-size:0.8rem;font-weight:600;color:#fff;text-align:center;}
+.icon-btn .emoji{font-size:34px;}
 
-  /* screens */
-  .screen{display:none;padding-bottom:20px}
-  .screen.active{display:block}
-
-  /* profile header */
-  .profile-header{display:flex;padding:16px;gap:12px;align-items:center;border-bottom:1px solid #faf0f0}
-  .avatar{width:84px;height:84px;border-radius:50%;background-image:url('https://cdn-icons-png.flaticon.com/512/149/149071.png');background-size:cover;background-position:center;border:2px solid #fff;box-shadow:0 6px 16px rgba(0,0,0,0.06)}
-  .meta{flex:1}
-  .meta .name{font-weight:700;font-size:16px}
-  .counts{display:flex;gap:18px;margin-top:10px;color:var(--muted);font-size:13px}
-  .counts strong{display:block;font-weight:700;color:#111}
-
-  .actions{display:flex;gap:8px;padding:12px}
-
-  .btn{flex:1;padding:9px;border-radius:10px;border:1px solid #ddd;background:#fff;font-weight:600;cursor:pointer}
-  .btn.secondary{background:var(--card)}
-
-  /* tabs */
-  .tabs{display:flex;border-top:1px solid #f3f3f3;border-bottom:1px solid #f3f3f3}
-  .tab{flex:1;padding:10px;text-align:center;cursor:pointer;color:var(--muted);font-weight:700}
-  .tab.active{color:var(--accent)}
-
-  /* feed grid */
-  .post{border-bottom:1px solid #f2f2f2;background:#fff;padding-bottom:12px}
-  .post .post-top{display:flex;align-items:center;padding:12px 12px 6px;gap:10px}
-  .post .post-top .small-avatar{width:36px;height:36px;border-radius:50%;background-size:cover;background-position:center}
-  .post .post-top .user{font-weight:700}
-  .post .post-img{width:100%;height:auto;display:block}
-  .post .post-actions{display:flex;align-items:center;gap:12px;padding:10px 12px}
-  .post .post-actions .heart{cursor:pointer}
-  .post .likes{padding:0 12px;font-weight:700}
-  .post .caption{padding:6px 12px;color:#222}
-  .post .comments{padding:6px 12px;color:var(--muted);font-size:14px}
-
-  /* post detail modal/page */
-  .detail-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:120}
-  .detail-wrap.active{display:flex}
-  .detail-card{width:94%;max-width:880px;background:#fff;border-radius:12px;display:flex;overflow:hidden;max-height:90vh}
-  .detail-left{flex:1;background:#111;display:flex;align-items:center;justify-content:center}
-  .detail-left img{max-width:100%;max-height:100%;object-fit:contain}
-  .detail-right{width:360px;padding:12px;display:flex;flex-direction:column}
-  .detail-right .meta-row{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid #f3f3f3}
-  .detail-right .scroll{overflow:auto;padding-top:10px}
-
-  /* comment form */
-  .comment-form{display:flex;gap:8px;padding:8px;border-top:1px solid #f3f3f3}
-  .comment-form input{flex:1;padding:8px;border-radius:8px;border:1px solid #eee}
-  .comment-form button{padding:8px 10px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer}
-
-  /* search */
-  .search-bar{padding:12px}
-  .search-bar input{width:100%;padding:10px;border-radius:10px;border:1px solid #eee}
-
-  /* reels */
-  .reel{height:420px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px}
-
-  /* settings */
-  .settings{padding:14px}
-  .settings .row{padding:12px;border-radius:8px;border:1px solid #f1f1f1;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-
-  /* bottom nav */
-  .bottom{height:64px;border-top:1px solid #eee;display:flex;align-items:center;justify-content:space-around;flex-shrink:0;background:linear-gradient(#fff,#fff)}
-  .navbtn{display:flex;flex-direction:column;align-items:center;gap:4px;color:#444;cursor:pointer}
-  .navbtn svg{width:22px;height:22px}
-  .navbtn.active{color:var(--accent);transform:translateY(-3px)}
-
-  /* login */
-  .login-screen{height:100%;display:flex;align-items:center;justify-content:center}
-  .login-card{width:90%;max-width:380px;padding:18px;border-radius:12px;background:#fff;border:1px solid #eee;box-shadow:0 8px 20px rgba(0,0,0,0.06)}
-  .login-card h2{margin-bottom:12px}
-  .login-card input{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:10px}
-  .login-card button{width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
-
-  /* responsive small */
-  @media (max-width:420px){ .detail-right{width:320px} .avatar{width:72px;height:72px} }
+.tabbar-wrap{
+  width:100%;background:rgba(20,20,20,0.6);backdrop-filter:blur(12px);
+  padding:10px 0;display:flex;justify-content:center;align-items:center;border-top:1px solid rgba(255,255,255,0.1);
+}
+.home-btn{
+  width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;cursor:pointer;transition:0.2s;
+}
+.home-btn:hover{background:rgba(120,120,120,0.8);border-color:var(--accent);}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <!-- Topbar -->
-  <div class="topbar" id="topbar" style="display:none">
-    <div class="brand">InstaDemo</div>
-    <div class="icons">
-      <div class="icon" title="알림" id="btnNotify">
-        <svg viewBox="0 0 24 24"><path d="M15 17H9a3 3 0 0 1-3-3v-3a6 6 0 0 1 12 0v3a3 3 0 0 1-3 3z" fill="currentColor"/></svg>
-      </div>
-      <div class="icon" title="설정" id="btnSettings">
-        <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/></svg>
-      </div>
+<div class="app">
+  <header>
+    <div class="logo">🔥 R!DE OUT</div>
+    <button class="login-box">login</button>
+  </header>
+
+  <main>
+    <div class="center-emoji">💫</div>
+    <div class="icon-grid">
+      <div class="icon-container"><button class="icon-btn" onclick="location.href='beat.html'"><div class="emoji">🎧</div></button><span class="icon-label">비트 추천</span></div>
+      <div class="icon-container"><button class="icon-btn"><div class="emoji">✍️</div></button><span class="icon-label">라임 추천</span></div>
+      <div class="icon-container"><button class="icon-btn"><div class="emoji">⏰</div></button><span class="icon-label">비트 알람</span></div>
+      <div class="icon-container"><button class="icon-btn"><div class="emoji">💪</div></button><span class="icon-label">건강 관리</span></div>
+      <div class="icon-container"><button class="icon-btn"><div class="emoji">🤖</div></button><span class="icon-label">성장형 AI</span></div>
     </div>
-  </div>
+  </main>
 
-  <!-- Main -->
-  <div class="main" id="main">
-    <!-- LOGIN SCREEN -->
-    <div class="screen" id="screenLogin">
-      <div class="login-screen">
-        <div class="login-card" role="form" aria-label="로그인 폼">
-          <h2>로그인</h2>
-          <input id="inputUser" placeholder="사용자 이름 (예: user1)" />
-          <input id="inputPass" placeholder="비밀번호" type="password" />
-          <button id="btnLogin">로그인</button>
-          <div style="margin-top:10px;color:var(--muted);text-align:center;font-size:13px">
-            데모용 로컬 로그인 — 아무 이름/비밀번호로 가능. 세션은 localStorage에 저장됩니다.
-          </div>
-          <hr style="margin:12px 0;border:none;border-top:1px dashed #eee" />
-          <div style="text-align:center">
-            <button id="btnContinueGuest" class="btn secondary">손님으로 계속하기</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- APP SCREENS -->
-    <div class="screen active" id="screenApp" style="display:none">
-      <!-- PROFILE header (for top of profile screen) -->
-      <div class="profile-header" id="profileHeader">
-        <div class="avatar" id="profileAvatar"></div>
-        <div class="meta">
-          <div class="name" id="profileName">사용자</div>
-          <div class="counts">
-            <div><strong id="statPosts">0</strong><span>게시물</span></div>
-            <div><strong id="statFollowers">0</strong><span>팔로워</span></div>
-            <div><strong id="statFollowing">0</strong><span>팔로잉</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Home / Search / Reels / Profile tabs -->
-      <div id="homeScreen">
-        <div class="tabs" id="tabs">
-          <div class="tab active" data-screen="home">홈</div>
-          <div class="tab" data-screen="search">검색</div>
-          <div class="tab" data-screen="reels">릴스</div>
-          <div class="tab" data-screen="profile">프로필</div>
-        </div>
-
-        <!-- HOME FEED -->
-        <div id="homeFeed" class="feed-panel" style="padding-bottom:10px">
-          <!-- posts will be appended here -->
-        </div>
-
-        <!-- SEARCH SCREEN -->
-        <div id="searchPanel" style="display:none;padding:12px">
-          <div class="search-bar"><input id="searchInput" placeholder="검색" /></div>
-          <div id="searchResults" style="padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
-        </div>
-
-        <!-- REELS -->
-        <div id="reelsPanel" style="display:none;padding:12px">
-          <div id="reelsList" style="display:flex;flex-direction:column;gap:12px"></div>
-        </div>
-
-        <!-- PROFILE -->
-        <div id="profilePanel" style="display:none;padding:12px">
-          <div style="display:flex;gap:12px;align-items:center">
-            <div class="avatar" style="width:72px;height:72px"></div>
-            <div>
-              <div style="font-weight:700" id="profilePanelName">사용자</div>
-              <div style="color:var(--muted)">간단한 소개글 — 데모</div>
-            </div>
-          </div>
-          <div style="margin-top:12px;display:flex;gap:8px">
-            <button class="btn" id="btnEditProfile">프로필 편집</button>
-            <button class="btn secondary" id="btnShareProfile">공유</button>
-          </div>
-
-          <h3 style="margin-top:14px">게시물</h3>
-          <div id="profilePostsGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:8px"></div>
-        </div>
-      </div>
-
-      <!-- spacer -->
-      <div style="height:20px"></div>
-    </div>
-
-    <!-- SETTINGS SCREEN (separate content overlay) -->
-    <div class="screen" id="settingsScreen" style="display:none">
-      <div style="padding:12px">
-        <h3>설정</h3>
-        <div class="settings">
-          <div class="row"><div>로그인 사용자</div><div id="settingsUser" style="color:var(--muted)"></div></div>
-          <div class="row"><div>테마</div><div><button id="toggleTheme" class="btn secondary">토글</button></div></div>
-          <div class="row"><div>로그아웃</div><div><button id="btnLogout" class="btn">로그아웃</button></div></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- bottom nav -->
-  <div class="bottom" id="bottomNav" style="display:none">
-    <div class="navbtn active" data-nav="home"><svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V11.5z" fill="currentColor"/></svg></div>
-    <div class="navbtn" data-nav="search"><svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.4" fill="none"/></svg></div>
-    <div class="navbtn" data-nav="reels"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M9 8v8l6-4-6-4z" fill="currentColor"/></svg></div>
-    <div class="navbtn" data-nav="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3" fill="currentColor"/><path d="M6 20c1.5-3 5.5-4 6-4s4.5 1 6 4" fill="currentColor"/></svg></div>
-  </div>
-</div>
-
-<!-- Post detail modal -->
-<div class="detail-wrap" id="detailWrap" aria-hidden="true">
-  <div class="detail-card" role="dialog" aria-label="게시물 상세">
-    <div class="detail-left" id="detailLeft"><img src="" alt="post image" id="detailImg" /></div>
-    <div class="detail-right">
-      <div class="meta-row">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="small-avatar" id="detailAvatar" style="width:40px;height:40px;border-radius:50%;background-size:cover"></div>
-          <div><div id="detailUser" style="font-weight:700">user</div><div style="font-size:13px;color:var(--muted)">위치</div></div>
-        </div>
-        <div style="margin-left:auto"><button id="closeDetail" class="btn secondary">닫기</button></div>
-      </div>
-
-      <div class="scroll" id="detailScroll" style="flex:1;padding:8px 0">
-        <div id="detailLikes" style="font-weight:700;padding:6px 0">0명이 좋아합니다</div>
-        <div id="detailCaption" style="padding-bottom:8px;color:#222"></div>
-        <div id="detailCommentList" style="margin-top:6px"></div>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:8px;padding-top:6px">
-        <button id="detailHeart" class="btn" style="flex:0 0 auto">♡ 좋아요</button>
-        <div style="flex:1"></div>
-      </div>
-
-      <div class="comment-form">
-        <input id="commentInput" placeholder="댓글 추가..." />
-        <button id="commentSend">게시</button>
-      </div>
-    </div>
+  <div class="tabbar-wrap">
+    <button class="home-btn"></button>
   </div>
 </div>
 
 <script>
-/* ===========================
-   Data structures & helpers
-   =========================== */
-
-const STORAGE_KEY = 'insta_demo_data_v1';
-const SESSION_KEY = 'insta_demo_user_v1';
-
-const samplePosts = [
-  {
-    id: 'p1',
-    user: 'alice',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200',
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1000',
-    caption: '노을이 예쁜 날 🌅 #sunset',
-    likes: 120,
-    likedByMe: false,
-    comments: [{user:'bob',text:'멋지다!'}, {user:'charlie', text:'어디야?'}],
-    createdAt: Date.now()-1000*60*60*24
-  },
-  {
-    id: 'p2',
-    user: 'bob',
-    avatar: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=200',
-    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=1000',
-    caption: '커피 한잔의 여유 ☕️',
-    likes: 56,
-    likedByMe: false,
-    comments: [{user:'alice',text:'맛있어보여!'}],
-    createdAt: Date.now()-1000*60*60*36
-  }
-];
-
-function loadData() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) {
-    const init = { posts: samplePosts.slice() };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(init));
-    return init;
-  }
-  try { return JSON.parse(raw); } catch(e){ return {posts: samplePosts.slice()}; }
+// 홈으로 돌아오는 기능이 beat.html에서 동작하도록 설정됨
+function goHome() {
+  window.location.href = './main.html';
 }
-function saveData(data){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-
-function getSessionUser(){ return localStorage.getItem(SESSION_KEY); }
-function setSessionUser(u){ if(u) localStorage.setItem(SESSION_KEY,u); else localStorage.removeItem(SESSION_KEY); }
-
-/* ===========================
-   App state
-   =========================== */
-
-let STATE = {
-  data: loadData(),
-  user: getSessionUser() || null,
-  currentPost: null
-};
-
-/* ===========================
-   DOM refs
-   =========================== */
-
-const screenLogin = document.getElementById('screenLogin');
-const screenApp = document.getElementById('screenApp');
-const topbar = document.getElementById('topbar');
-const bottomNav = document.getElementById('bottomNav');
-const main = document.getElementById('main');
-const homeFeed = document.getElementById('homeFeed');
-const profilePostsGrid = document.getElementById('profilePostsGrid');
-const profilePanelName = document.getElementById('profilePanelName');
-const profileHeader = document.getElementById('profileHeader');
-const profileName = document.getElementById('profileName');
-const statPosts = document.getElementById('statPosts');
-const statFollowers = document.getElementById('statFollowers');
-const statFollowing = document.getElementById('statFollowing');
-
-const tabs = document.querySelectorAll('.tab');
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-const reelsList = document.getElementById('reelsList');
-
-const detailWrap = document.getElementById('detailWrap');
-const detailImg = document.getElementById('detailImg');
-const detailAvatar = document.getElementById('detailAvatar');
-const detailUser = document.getElementById('detailUser');
-const detailLikes = document.getElementById('detailLikes');
-const detailCaption = document.getElementById('detailCaption');
-const detailCommentList = document.getElementById('detailCommentList');
-const detailHeart = document.getElementById('detailHeart');
-const commentInput = document.getElementById('commentInput');
-const commentSend = document.getElementById('commentSend');
-
-const settingsScreen = document.getElementById('settingsScreen');
-const settingsUser = document.getElementById('settingsUser');
-
-/* ===========================
-   UI rendering
-   =========================== */
-
-function showLoginScreen() {
-  screenLogin.style.display = 'block';
-  screenApp.style.display = 'none';
-  topbar.style.display = 'none';
-  bottomNav.style.display = 'none';
-  settingsScreen.style.display = 'none';
-}
-
-function showAppScreen() {
-  screenLogin.style.display = 'none';
-  screenApp.style.display = 'block';
-  topbar.style.display = 'flex';
-  bottomNav.style.display = 'flex';
-  settingsScreen.style.display = 'none';
-  updateProfileHeader();
-  renderFeed();
-  renderProfilePosts();
-  updateStats();
-  renderReels();
-}
-
-function updateProfileHeader(){
-  const user = STATE.user || '손님';
-  profileName.textContent = user;
-  profilePanelName.textContent = user;
-  settingsUser.textContent = user;
-}
-
-function renderFeed(){
-  homeFeed.innerHTML = '';
-  const posts = STATE.data.posts.slice().sort((a,b)=>b.createdAt - a.createdAt);
-  for (const p of posts){
-    const div = document.createElement('div'); div.className = 'post';
-    div.innerHTML = `
-      <div class="post-top">
-        <div class="small-avatar" style="background-image:url('${p.avatar}')" aria-hidden="true"></div>
-        <div class="user">${escapeHtml(p.user)}</div>
-      </div>
-      <img class="post-img" src="${p.image}" alt="${escapeHtml(p.caption)}" />
-      <div class="post-actions">
-        <div class="heart" data-id="${p.id}" aria-label="좋아요 버튼" role="button">${p.likedByMe? '❤️':'♡'}</div>
-        <div style="flex:1"></div>
-        <div class="open" data-id="${p.id}" role="button">댓글 보기</div>
-      </div>
-      <div class="likes">${p.likes}명이 좋아합니다</div>
-      <div class="caption"><strong>${escapeHtml(p.user)}</strong> ${escapeHtml(p.caption)}</div>
-      <div class="comments">${p.comments.length>0? p.comments.slice(0,2).map(c=>`<div><strong>${escapeHtml(c.user)}</strong> ${escapeHtml(c.text)}</div>`).join(''):''}</div>
-    `;
-    // heart click
-    div.querySelector('.heart').addEventListener('click', (e)=>{
-      const id = e.currentTarget.dataset.id;
-      toggleLike(id);
-    });
-    // open detail
-    div.querySelector('.open').addEventListener('click', (e)=>{
-      openDetail(p.id);
-    });
-    // clicking the image opens detail as well
-    div.querySelector('.post-img').addEventListener('click', ()=> openDetail(p.id));
-    homeFeed.appendChild(div);
-  }
-}
-
-/* render small grid in profile */
-function renderProfilePosts(){
-  profilePostsGrid.innerHTML = '';
-  const posts = STATE.data.posts.slice().sort((a,b)=>b.createdAt - a.createdAt);
-  for (const p of posts){
-    const img = document.createElement('img');
-    img.src = p.image;
-    img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
-    img.style.cursor='pointer';
-    img.addEventListener('click', ()=> openDetail(p.id));
-    profilePostsGrid.appendChild(img);
-  }
-  statPosts.textContent = posts.length;
-}
-
-/* update follower/following dummy */
-function updateStats(){
-  statFollowers.textContent = 202;
-  statFollowing.textContent = 199;
-}
-
-/* search render */
-function renderSearchResults(q=''){
-  searchResults.innerHTML = '';
-  const posts = STATE.data.posts.filter(p=> p.caption.toLowerCase().includes(q.toLowerCase()) || p.user.toLowerCase().includes(q.toLowerCase()));
-  for (const p of posts){
-    const img = document.createElement('img');
-    img.src = p.image;
-    img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
-    img.style.cursor='pointer';
-    img.addEventListener('click', ()=> openDetail(p.id));
-    searchResults.appendChild(img);
-  }
-}
-
-/* reels render (simple) */
-function renderReels(){
-  reelsList.innerHTML = '';
-  // create a few demo reel cards (using images as placeholders)
-  const posts = STATE.data.posts.slice().sort((a,b)=>b.createdAt - a.createdAt);
-  for (const p of posts){
-    const r = document.createElement('div');
-    r.className='reel';
-    r.style.height='360px';
-    r.style.backgroundImage = `url(${p.image})`;
-    r.style.backgroundSize='cover';
-    r.style.backgroundPosition='center';
-    r.style.color='#fff';
-    r.style.position='relative';
-    r.innerHTML = `<div style="position:absolute;left:12px;bottom:12px;font-weight:700">${escapeHtml(p.user)}</div>`;
-    r.addEventListener('click', ()=> openDetail(p.id));
-    reelsList.appendChild(r);
-  }
-}
-
-/* ===========================
-   Post detail
-   =========================== */
-
-function openDetail(postId){
-  const p = STATE.data.posts.find(x=>x.id===postId);
-  if(!p) return;
-  STATE.currentPost = p.id;
-  detailImg.src = p.image;
-  detailAvatar.style.backgroundImage = `url('${p.avatar}')`;
-  detailUser.textContent = p.user;
-  detailLikes.textContent = `${p.likes}명이 좋아합니다`;
-  detailCaption.innerHTML = `<strong>${escapeHtml(p.user)}</strong> ${escapeHtml(p.caption)}`;
-  // comments
-  detailCommentList.innerHTML = '';
-  for (const c of p.comments){
-    const d = document.createElement('div');
-    d.style.padding='6px 0';
-    d.innerHTML = `<strong>${escapeHtml(c.user)}</strong> ${escapeHtml(c.text)}`;
-    detailCommentList.appendChild(d);
-  }
-  detailHeart.textContent = p.likedByMe? '💖 좋아요 취소':'♡ 좋아요';
-  detailWrap.classList.add('active');
-  detailWrap.setAttribute('aria-hidden','false');
-}
-
-document.getElementById('closeDetail').addEventListener('click', ()=> {
-  detailWrap.classList.remove('active'); detailWrap.setAttribute('aria-hidden','true');
-  STATE.currentPost = null;
-});
-
-/* like toggle */
-function toggleLike(postId){
-  const p = STATE.data.posts.find(x=>x.id===postId);
-  if(!p) return;
-  if(p.likedByMe){ p.likedByMe=false; p.likes = Math.max(0,p.likes-1); }
-  else { p.likedByMe=true; p.likes = p.likes+1; }
-  saveData(STATE.data);
-  renderFeed();
-  // if detail open update
-  if(STATE.currentPost === p.id) {
-    detailLikes.textContent = `${p.likes}명이 좋아합니다`;
-    detailHeart.textContent = p.likedByMe? '💖 좋아요 취소':'♡ 좋아요';
-  }
-}
-
-/* comment send */
-commentSend.addEventListener('click', ()=>{
-  const text = commentInput.value.trim();
-  if(!text) return;
-  const user = STATE.user || 'guest';
-  const p = STATE.data.posts.find(x=>x.id===STATE.currentPost);
-  if(!p) return;
-  p.comments.push({user, text});
-  saveData(STATE.data);
-  // update UI
-  const d = document.createElement('div'); d.style.padding='6px 0'; d.innerHTML = `<strong>${escapeHtml(user)}</strong> ${escapeHtml(text)}`;
-  detailCommentList.appendChild(d);
-  commentInput.value='';
-  renderFeed();
-});
-
-/* ===========================
-   Login / Logout
-   =========================== */
-
-document.getElementById('btnLogin').addEventListener('click', ()=>{
-  const u = document.getElementById('inputUser').value.trim();
-  const p = document.getElementById('inputPass').value;
-  if(!u){ alert('사용자 이름을 입력하세요'); return; }
-  // simple demo authentication: accept any input
-  setSessionUser(u);
-  STATE.user = u;
-  showAppScreen();
-});
-
-document.getElementById('btnContinueGuest').addEventListener('click', ()=>{
-  setSessionUser('guest');
-  STATE.user = 'guest';
-  showAppScreen();
-});
-
-document.getElementById('btnLogout').addEventListener('click', ()=>{
-  setSessionUser(null);
-  STATE.user = null;
-  // hide app, show login
-  showLoginScreen();
-});
-
-/* ===========================
-   Navigation & tabs
-   =========================== */
-
-document.querySelectorAll('.tab').forEach(t=>{
-  t.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    const s = t.dataset.screen;
-    // hide all panels
-    document.getElementById('homeFeed').style.display = s==='home' ? 'block' : 'none';
-    document.getElementById('searchPanel').style.display = s==='search' ? 'block' : 'none';
-    document.getElementById('reelsPanel').style.display = s==='reels' ? 'block' : 'none';
-    document.getElementById('profilePanel').style.display = s==='profile' ? 'block' : 'none';
-    // focus search input if search
-    if(s==='search') searchInput.focus();
-  });
-});
-
-/* bottom nav */
-document.querySelectorAll('.navbtn').forEach(nb=>{
-  nb.addEventListener('click', ()=>{
-    document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));
-    nb.classList.add('active');
-    const nav = nb.dataset.nav;
-    // switch to corresponding tab
-    if(nav==='home') document.querySelector('[data-screen="home"]').click();
-    if(nav==='search') document.querySelector('[data-screen="search"]').click();
-    if(nav==='reels') document.querySelector('[data-screen="reels"]').click();
-    if(nav==='profile') document.querySelector('[data-screen="profile"]').click();
-  });
-});
-
-/* settings button */
-document.getElementById('btnSettings').addEventListener('click', ()=>{
-  // show settings screen (overlay simple)
-  screenApp.style.display = 'none';
-  settingsScreen.style.display = 'block';
-  topbar.style.display='flex';
-  bottomNav.style.display='flex';
-});
-
-/* settings back (when clicking top brand) */
-document.getElementById('btnNotify').addEventListener('click', ()=> {
-  alert('알림 (데모) — 없음');
-});
-
-/* back from settings: click brand to return */
-document.querySelector('.brand').addEventListener('click', ()=>{
-  settingsScreen.style.display='none';
-  screenApp.style.display='block';
-});
-
-/* ===========================
-   Search handlers
-   =========================== */
-
-searchInput.addEventListener('input', (e)=> {
-  renderSearchResults(e.target.value);
-});
-
-/* ===========================
-   Utility: escape HTML
-   =========================== */
-function escapeHtml(s){
-  if(!s) return '';
-  return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; });
-}
-
-/* ===========================
-   Initialize app
-   =========================== */
-
-function init(){
-  // if logged in show app, else login
-  const user = getSessionUser();
-  STATE.user = user;
-  if(!user){
-    showLoginScreen();
-  } else {
-    showAppScreen();
-  }
-  // populate initial UI elements
-  renderSearchResults('');
-  // set listeners for top-level interface
-  document.getElementById('btnEditProfile').addEventListener('click', ()=>{
-    const newName = prompt('새 프로필 이름을 입력하세요', STATE.user || 'guest');
-    if(newName){ STATE.user = newName; setSessionUser(newName); updateProfileHeader(); profilePanelName.textContent = newName; }
-  });
-  document.getElementById('btnShareProfile').addEventListener('click', ()=>{
-    alert('프로필 공유 (데모) 링크가 클립보드에 복사되었습니다.');
-  });
-
-  // allow clicking outside detail to close
-  detailWrap.addEventListener('click', (e)=>{
-    if(e.target === detailWrap){ detailWrap.classList.remove('active'); STATE.currentPost=null; }
-  });
-
-  // small helper: dispatch clicks for heart in detail
-  detailHeart.addEventListener('click', ()=>{
-    if(!STATE.currentPost) return;
-    toggleLike(STATE.currentPost);
-    // update detail UI
-    const p = STATE.data.posts.find(x=>x.id===STATE.currentPost);
-    detailLikes.textContent = `${p.likes}명이 좋아합니다`;
-    detailHeart.textContent = p.likedByMe? '💖 좋아요 취소':'♡ 좋아요';
-  });
-}
-
-/* run init */
-init();
-
 </script>
 </body>
 </html>
