@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>R!DE OUT • 비트 추천</title>
+
 <style>
 :root {
   --bg:#000; --fg:#fff; --card:#0d0d0d; --accent:#8a7cff; --gray:#777;
@@ -13,12 +14,14 @@ html,body{
   height:100%;background:var(--bg);color:var(--fg);
   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
+
 .app{
   width:100%;max-width:430px;height:100vh;margin:0 auto;
   display:flex;flex-direction:column;justify-content:space-between;
   background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;
   box-shadow:0 0 20px rgba(0,0,0,.8);
 }
+
 header{
   position:relative;display:flex;align-items:center;justify-content:center;
   padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
@@ -27,6 +30,7 @@ header{
 .login-box{position:absolute;right:18px;top:50%;transform:translateY(-50%);
   border:1px solid #555;border-radius:10px;padding:6px 16px;background:none;color:#fff;cursor:pointer;}
 .login-box:hover{border-color:var(--accent);color:var(--accent);}
+
 main{
   flex:1;display:flex;flex-direction:column;align-items:center;padding:25px 18px;gap:18px;overflow-y:auto;
 }
@@ -43,6 +47,7 @@ main{
 .search-box button{
   background:var(--accent);border:none;border-radius:8px;color:#fff;padding:6px 10px;font-weight:600;cursor:pointer;
 }
+
 .results{
   display:flex;flex-direction:column;width:100%;gap:16px;margin-top:10px;
 }
@@ -59,6 +64,7 @@ main{
   background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;transition:0.2s;
 }
 .feedback button:hover{color:var(--accent);transform:scale(1.2);}
+
 .saved-section{
   position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);
   display:none;flex-direction:column;align-items:center;overflow-y:auto;z-index:10;padding-top:80px;
@@ -78,18 +84,20 @@ main{
   background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;transition:0.2s;
 }
 .saved-icons button:hover{color:var(--accent);transform:scale(1.2);}
+
 /* 하단 홈 버튼 */
 .tabbar-wrap{
   width:100%;background:rgba(20,20,20,0.6);backdrop-filter:blur(12px);
   padding:10px 0;display:flex;justify-content:center;align-items:center;border-top:1px solid rgba(255,255,255,0.1);
 }
 .home-btn{
-  display:block;width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;
-  transition:0.2s;text-decoration:none;
+  width:80px;height:40px;background:rgba(60,60,60,0.8);border:1px solid #555;border-radius:10px;
+  cursor:pointer;transition:0.2s;
 }
 .home-btn:hover{background:rgba(120,120,120,0.8);border-color:var(--accent);}
 </style>
 </head>
+
 <body>
 <div class="app">
   <header>
@@ -113,9 +121,9 @@ main{
     <div class="results" id="results"></div>
   </main>
 
-  <!-- a태그로 홈 이동 -->
+  <!-- ✅ 홈 버튼: 메인으로 이동 -->
   <div class="tabbar-wrap">
-    <a href="main.html" class="home-btn" aria-label="홈으로"></a>
+    <button class="home-btn" onclick="location.href='main.html'"></button>
   </div>
 </div>
 
@@ -192,14 +200,6 @@ function showSaved(type){
 function closeSaved(){
   document.getElementById('savedSection').style.display = 'none';
 }
-
-// ✅ 홈 버튼: 완전 강제 이동 (어디서든 작동)
-document.querySelector('.home-btn').addEventListener('click', () => {
-  try {
-    // main.html이 같은 폴더에 있다면 이 코드로 충분
-    location.assign('main.html');
-  } catch (e) {
-    alert('main.html 파일이 같은 폴더에 있는지 확인해주세요!');
-  }
-});
 </script>
+</body>
+</html>
