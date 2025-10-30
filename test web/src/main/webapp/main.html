@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>R!DE OUT • 환영합니다</title>
 <style>
 body {
@@ -29,13 +29,14 @@ if(user && user.name){
     <h2>${user.name}님 환영합니다 👋</h2>
     <p>잠시 후 메인 화면으로 이동합니다...</p>
   `;
-  // ✅ 2초 뒤 홈으로 이동
+
+  // ✅ 2초 뒤 home.html로 이동 (이클립스 구조 기준)
   setTimeout(() => {
-    console.log("홈으로 이동 중...");
-    window.location.href = './home.html';
+    window.location.href = "/testweb/home.html";
   }, 2000);
+
 }else{
-  window.location.href = './login.html';
+  window.location.href = "/testweb/login.html";
 }
 </script>
 </body>

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>R!DE OUT • 로그인</title>
 <style>
 body {
@@ -36,7 +36,7 @@ function fakeLogin(){
   const name = document.getElementById('username').value || 'Guest';
   const picture = document.getElementById('profile').value || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
   localStorage.setItem('rideout_user', JSON.stringify({ name, picture }));
-  window.location.href = 'main.html';
+  window.location.href = "/testweb/main.html"; // 이클립스 경로 기준
 }
 </script>
 </body>

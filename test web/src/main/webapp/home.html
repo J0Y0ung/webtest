@@ -18,8 +18,6 @@ html,body{
   background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;
   box-shadow:0 0 20px rgba(0,0,0,.8);
 }
-
-/* 상단 */
 header{
   display:flex;align-items:center;justify-content:center;
   padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
@@ -44,8 +42,6 @@ header{
   font-size:0.85rem;padding:6px 0;
 }
 .logout-popup button:hover{color:var(--accent);}
-
-/* 메인 */
 main{
   flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;
   justify-content:flex-start;padding:20px;gap:20px;
@@ -58,8 +54,6 @@ main{
 }
 .app-icon:hover{background:#1a1a1a;transform:scale(1.05);}
 .app-icon i{font-size:1.6rem;margin-bottom:5px;}
-
-/* 하단 탭바 */
 footer{
   height:60px;background:#111;display:flex;align-items:center;justify-content:center;
   border-top:1px solid #333;
@@ -76,29 +70,30 @@ footer{
 <div class="app">
   <header>
     <div class="logo">🔥 R!DE OUT</div>
-
     <div id="userInfo" class="user-info" style="display:none;">
       <img id="userImg" src="">
       <span id="userName"></span>
     </div>
-
     <div id="logoutPopup" class="logout-popup">
       <button id="logoutBtn">🚪 로그아웃</button>
     </div>
   </header>
 
   <main id="appArea">
-    <div class="app-icon" onclick="openPage('beat.html')">
+    <div class="app-icon" onclick="openPage('/testweb/beat.html')">
       <i>🎧</i><span>비트 추천</span>
     </div>
-    <div class="app-icon" onclick="openPage('rhyme.html')">
+    <div class="app-icon" onclick="openPage('/testweb/rhyme.html')">
       <i>✍️</i><span>라임 추천</span>
     </div>
-    <div class="app-icon" onclick="openPage('schedule.html')">
-      <i>📅</i><span>일정 관리</span>
+    <div class="app-icon" onclick="openPage('/testweb/alarm.html')">
+      <i>⏰</i><span>비트 알람</span>
     </div>
-    <div class="app-icon" onclick="openPage('ai.html')">
-      <i>🤖</i><span>AI 성장</span>
+    <div class="app-icon" onclick="openPage('/testweb/health.html')">
+      <i>💪</i><span>건강 관리</span>
+    </div>
+    <div class="app-icon" onclick="openPage('/testweb/ai.html')">
+      <i>🤖</i><span>성장하는 AI</span>
     </div>
   </main>
 
@@ -108,34 +103,34 @@ footer{
 </div>
 
 <script>
-// ✅ 로그인된 사용자 정보 표시
+// ✅ 사용자 정보 표시
 const user = JSON.parse(localStorage.getItem('rideout_user'));
 if(user){
   document.getElementById('userImg').src = user.picture;
   document.getElementById('userName').textContent = user.name;
   document.getElementById('userInfo').style.display = 'flex';
 }else{
-  window.location.href = 'login.html';
+  window.location.href = '/testweb/login.html';
 }
 
-// ✅ 로그아웃 기능
+// ✅ 로그아웃
 document.getElementById('userInfo').addEventListener('click',()=>{
   const popup=document.getElementById('logoutPopup');
   popup.style.display = popup.style.display==='flex' ? 'none' : 'flex';
 });
 document.getElementById('logoutBtn').addEventListener('click',()=>{
   localStorage.removeItem('rideout_user');
-  window.location.href='login.html';
+  window.location.href='/testweb/login.html';
 });
 
-// ✅ 하단 홈버튼
+// ✅ 하단 홈 버튼
 function goHome(){
-  window.location.href='home.html';
+  window.location.href='/testweb/home.html';
 }
 
-// ✅ 앱 이동
+// ✅ 페이지 이동
 function openPage(page){
-  alert(page + " 화면으로 이동 (아직 연결 전)");
+  window.location.href = page;
 }
 </script>
 </body>
