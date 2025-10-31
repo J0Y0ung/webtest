@@ -36,9 +36,7 @@ function fakeLogin(){
   const name = document.getElementById('username').value || 'Guest';
   const picture = document.getElementById('profile').value || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
   localStorage.setItem('rideout_user', JSON.stringify({ name, picture }));
-
-  // ✅ 정확한 경로
-  window.location.href = "/testweb/main.html";
+  window.location.href = "main.html"; // ✅ 상대경로
 }
 </script>
 </body>

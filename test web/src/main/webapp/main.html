@@ -30,12 +30,12 @@ if(user && user.name){
     <p>잠시 후 메인 화면으로 이동합니다...</p>
   `;
 
-  // ✅ 2초 뒤 홈으로 이동
   setTimeout(() => {
-    window.location.href = "/testweb/home.html";
+    window.location.href = "home.html"; // ✅ 상대경로
   }, 2000);
+
 }else{
-  window.location.href = "/testweb/login.html";
+  window.location.href = "login.html"; // ✅ 상대경로
 }
 </script>
 </body>

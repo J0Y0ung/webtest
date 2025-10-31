@@ -116,34 +116,34 @@ footer{
 </div>
 
 <script>
-// ✅ 로그인 정보 확인
+// ✅ 로그인 정보 표시
 const user = JSON.parse(localStorage.getItem('rideout_user'));
 if(user){
   document.getElementById('userImg').src = user.picture;
   document.getElementById('userName').textContent = user.name;
   document.getElementById('userInfo').style.display = 'flex';
 }else{
-  window.location.href = '/testweb/login.html';
+  window.location.href = "login.html"; // ✅ 상대경로
 }
 
-// ✅ 로그아웃 기능
+// ✅ 로그아웃
 document.getElementById('userInfo').addEventListener('click',()=>{
   const popup=document.getElementById('logoutPopup');
   popup.style.display = popup.style.display==='flex' ? 'none' : 'flex';
 });
 document.getElementById('logoutBtn').addEventListener('click',()=>{
   localStorage.removeItem('rideout_user');
-  window.location.href='/testweb/login.html';
+  window.location.href = "login.html"; // ✅ 상대경로
 });
 
 // ✅ 홈 버튼
 function goHome(){
-  window.location.href='/testweb/home.html';
+  window.location.href = "home.html"; // ✅ 상대경로
 }
 
-// ✅ 각 페이지 이동
+// ✅ 앱 이동
 function openPage(page){
-  window.location.href = page;
+  window.location.href = page; // ✅ 이미 같은 폴더면 이렇게
 }
 </script>
 </body>
