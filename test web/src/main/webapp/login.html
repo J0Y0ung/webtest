@@ -36,7 +36,9 @@ function fakeLogin(){
   const name = document.getElementById('username').value || 'Guest';
   const picture = document.getElementById('profile').value || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
   localStorage.setItem('rideout_user', JSON.stringify({ name, picture }));
-  window.location.href = "/testweb/main.html"; // 이클립스 경로 기준
+
+  // ✅ 정확한 경로
+  window.location.href = "/testweb/main.html";
 }
 </script>
 </body>

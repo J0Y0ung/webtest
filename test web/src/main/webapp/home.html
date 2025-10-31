@@ -18,6 +18,8 @@ html,body{
   background:var(--bg);border:1px solid #222;border-radius:30px;overflow:hidden;
   box-shadow:0 0 20px rgba(0,0,0,.8);
 }
+
+/* 상단 영역 */
 header{
   display:flex;align-items:center;justify-content:center;
   padding:10px 18px;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);
@@ -42,6 +44,8 @@ header{
   font-size:0.85rem;padding:6px 0;
 }
 .logout-popup button:hover{color:var(--accent);}
+
+/* 메인 아이콘 영역 */
 main{
   flex:1;display:flex;flex-wrap:wrap;align-content:flex-start;
   justify-content:flex-start;padding:20px;gap:20px;
@@ -54,6 +58,8 @@ main{
 }
 .app-icon:hover{background:#1a1a1a;transform:scale(1.05);}
 .app-icon i{font-size:1.6rem;margin-bottom:5px;}
+
+/* 하단 탭바 */
 footer{
   height:60px;background:#111;display:flex;align-items:center;justify-content:center;
   border-top:1px solid #333;
@@ -68,17 +74,23 @@ footer{
 
 <body>
 <div class="app">
+  <!-- 상단 헤더 -->
   <header>
     <div class="logo">🔥 R!DE OUT</div>
+
+    <!-- 로그인된 사용자 표시 -->
     <div id="userInfo" class="user-info" style="display:none;">
       <img id="userImg" src="">
       <span id="userName"></span>
     </div>
+
+    <!-- 로그아웃 팝업 -->
     <div id="logoutPopup" class="logout-popup">
       <button id="logoutBtn">🚪 로그아웃</button>
     </div>
   </header>
 
+  <!-- 앱 메인 아이콘 -->
   <main id="appArea">
     <div class="app-icon" onclick="openPage('/testweb/beat.html')">
       <i>🎧</i><span>비트 추천</span>
@@ -97,13 +109,14 @@ footer{
     </div>
   </main>
 
+  <!-- 하단 탭바 -->
   <footer>
     <div class="tab-btn" onclick="goHome()"></div>
   </footer>
 </div>
 
 <script>
-// ✅ 사용자 정보 표시
+// ✅ 로그인 정보 확인
 const user = JSON.parse(localStorage.getItem('rideout_user'));
 if(user){
   document.getElementById('userImg').src = user.picture;
@@ -113,7 +126,7 @@ if(user){
   window.location.href = '/testweb/login.html';
 }
 
-// ✅ 로그아웃
+// ✅ 로그아웃 기능
 document.getElementById('userInfo').addEventListener('click',()=>{
   const popup=document.getElementById('logoutPopup');
   popup.style.display = popup.style.display==='flex' ? 'none' : 'flex';
@@ -123,12 +136,12 @@ document.getElementById('logoutBtn').addEventListener('click',()=>{
   window.location.href='/testweb/login.html';
 });
 
-// ✅ 하단 홈 버튼
+// ✅ 홈 버튼
 function goHome(){
   window.location.href='/testweb/home.html';
 }
 
-// ✅ 페이지 이동
+// ✅ 각 페이지 이동
 function openPage(page){
   window.location.href = page;
 }
